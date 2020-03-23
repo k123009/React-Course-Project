@@ -9,7 +9,7 @@ function TextInput(props) {
           id={props.id}
           type="text"
           name={props.name}
-          onChange={props.onChanged}
+          onChange={props.onChange}
           className="form-control"
           value={props.value}
         />

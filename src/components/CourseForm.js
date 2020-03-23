@@ -1,21 +1,18 @@
 import React from "react";
+import TextInput from "./common/TextInput";
+import PropTypes from "prop-types";
 
 function CourseForm(props) {
   return (
-    <form>
-      <div className="form-group">
-        <label htmlFor="title">Title</label>
-        <div className="field">
-          <input
-            id="title"
-            type="text"
-            name="title"
-            onChange={props.onChanged}
-            className="form-control"
-            value={props.course.title}
-          />
-        </div>
-      </div>
+    <form onSubmit={props.onSubmit}>
+      <TextInput
+        id="title"
+        name="title"
+        label="title"
+        onChange={props.onChange}
+        value={props.course.title}
+        error={props.errors.title}
+      />
 
       <div className="form-group">
         <label htmlFor="author">Author</label>
@@ -23,7 +20,7 @@ function CourseForm(props) {
           <select
             id="author"
             name="authorId"
-            onChange={props.onChanged}
+            onChange={props.onChange}
             value={props.course.authorId || ""}
             className="form-control"
           >
@@ -32,25 +29,30 @@ function CourseForm(props) {
             <option value="2">Scott Allen</option>
           </select>
         </div>
+        {props.errors.authorId && (
+          <div className="alert alert-danger">{props.errors.authorId}</div>
+        )}
       </div>
 
-      <div className="form-group">
-        <label htmlFor="category">Category</label>
-        <div className="field">
-          <input
-            type="text"
-            id="category"
-            name="category"
-            onChange={props.onChanged}
-            className="form-control"
-            value={props.course.category || ""}
-          />
-        </div>
-      </div>
+      <TextInput
+        label="Category"
+        id="category"
+        name="category"
+        onChange={props.onChange}
+        value={props.course.category || ""}
+        error={props.errors.category}
+      />
 
       <input type="submit" value="Save" className="btn btn-primary" />
     </form>
   );
 }
+
+CourseForm.propTypes = {
+  course: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired
+};
 
 export default CourseForm;

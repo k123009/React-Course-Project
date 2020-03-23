@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import CourseForm from "./CourseForm";
+import * as courseApi from "../api/courseApi";
+import { toast } from "react-toastify";
 
 const ManageCoursePage = props => {
+  const [errors, setErrors] = useState({});
   const [course, setCourse] = useState({
     id: null,
     slug: "",
@@ -17,10 +20,36 @@ const ManageCoursePage = props => {
     });
   }
 
+  function formIsValid() {
+    const _errors = {};
+
+    if (!course.title) _errors.title = "Title is empty.";
+    if (!course.category) _errors.category = "Category is empty.";
+    if (!course.authorId) _errors.authorId = "AuthorId is empty.";
+
+    setErrors(_errors);
+    return Object.keys(_errors).length === 0;
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    if (!formIsValid()) return;
+
+    courseApi.saveCourse(course).then(() => {
+      props.history.push("/courses");
+      toast.success("Course Saved");
+    });
+  }
+
   return (
     <>
       <h2>Manage Course </h2>
-      <CourseForm course={course} onChanged={handleChange} />
+      <CourseForm
+        course={course}
+        errors={errors}
+        onChange={handleChange}
+        onSubmit={handleSubmit}
+      />
     </>
   );
 };
